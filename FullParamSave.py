@@ -40,11 +40,12 @@ regex_filtering = True
 lemmatization = True # False will switch to stemming
 occurance_min_count = 20
 occurance_max_percent = .5
-words_per_topic = 10 #max 20
+words_per_topic = 10 # Max 20
 top_docs_per_topic =  10
 show_docs = True
 
 # LDA params
+# Ideal number of topics fell between 15 - 25
 num_topics = 15
 
 # Only need to change if you delete previous save file
@@ -177,7 +178,8 @@ def stem(df):
         df.loc[l_lim_docs:h_lim_docs,'titleL'] = df.loc[l_lim_docs:h_lim_docs,'titleL'].apply(gm_stem)
         df.to_pickle(csv_saveRSOS+".pkl")
     return df
-  
+
+# Creates the model
 def get_lda(corpus,corp_dict):
     model = ""
     if(os.path.exists(model_save)):
@@ -185,7 +187,7 @@ def get_lda(corpus,corp_dict):
     else:
         temp = corp_dict[0]
         id2word = corp_dict.id2token
-        
+       
         model = LdaModel(
             corpus=corpus,
             id2word=id2word,
@@ -205,6 +207,8 @@ def sort_by_date(df):
     df.to_pickle(csv_saveRSOLTS+".pkl")
     return df
 
+# Generates a wordcloud visualization
+# Need to manually add topic names under topics var
 def wordcloud_gen(model):
     topics = ["Charging Ads","Community","Manufacturing","Investment","Astronomy","Systems design","Business","Energy Sources","Elon Musk","Markets","Development", "Meteorology", "Composition","Public sector","Infrastructure"]
     for t in range(model.num_topics):
@@ -273,7 +277,8 @@ def occurences(df,dpt):
                 numDocumentsInYear=50.0/10997
             opt[i][ar[yearVal]]+=numDocumentsInYear
     return opt
-  
+
+# Creates a trending heat map over time
 def plot_trending(opt):
     plt.title('Percent of documents about a topic each year',fontsize = 20)
     xticklabels = ["2015\n\n3812\nDocs","2016\n\n16871\nDocs","2017\n\n6251\nDocs","2018\n\n2980\nDocs","2020\n\n10997\nDocs",]
